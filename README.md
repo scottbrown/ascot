@@ -28,6 +28,11 @@ If an owner is found, the ARN of the IAM user is displayed.
 **It is recommended to have unrestricted `iam:ListUser` privileges in the
 AWS account in order to ensure all users are searched.**
 
+## Contributing
+
+Any help is appreciated.  Please put your changes in a branch and then
+create a Pull Request (PR).
+
 ## License
 
 [MIT](LICENSE)
