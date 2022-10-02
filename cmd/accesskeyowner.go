@@ -21,7 +21,7 @@ var accessKeyOwnerCmd = &cobra.Command{
 	Short: "Finds the owner of a given AWS access key id",
 	Long:  `Given an AWS access key, prints the details of the key or nothing if no match`,
 	Args: func(cmd *cobra.Command, args []string) error {
-		if len(args) < 1 {
+		if !ShowRequiredPermissions && len(args) < 1 {
 			return errors.New("Missing required argument: access key id")
 		}
 
@@ -30,6 +30,12 @@ var accessKeyOwnerCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		var cfg aws.Config
 		var err error
+
+		if ShowRequiredPermissions {
+			fmt.Println("iam:ListAccessKeys")
+			fmt.Println("iam:ListUsers")
+			return
+		}
 
 		if Profile != "" {
 			cfg, err = config.LoadDefaultConfig(context.TODO(),

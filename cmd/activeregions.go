@@ -20,6 +20,11 @@ var activeRegionsCmd = &cobra.Command{
 		var cfg aws.Config
 		var err error
 
+		if ShowRequiredPermissions {
+			fmt.Println("ec2:DescribeRegions")
+			return nil
+		}
+
 		if Profile != "" {
 			cfg, err = config.LoadDefaultConfig(context.TODO(),
 				config.WithRegion(DEFAULT_REGION),
