@@ -12,8 +12,6 @@ import (
 	"os"
 )
 
-var AccessKeyId string
-
 func init() {
 	rootCmd.AddCommand(findaccesskeyownerCmd)
 }
