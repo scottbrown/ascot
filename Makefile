@@ -7,3 +7,14 @@ build:
 .PHONY: fmt
 fmt:
 	go fmt ./...
+
+.PHONY: security-check
+security-check: supply-chain sast
+
+.PHONY: supply-chain
+supply-chain:
+	govulncheck ./...
+
+.PHONY: sast
+sast:
+	gosec ./...
