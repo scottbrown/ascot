@@ -23,8 +23,7 @@ var rootCmd = &cobra.Command{
 		var err error
 
 		if ShowRequiredPermissions {
-			fmt.Println("iam:ListAccessKeys")
-			fmt.Println("iam:ListUsers")
+			fmt.Println("none")
 			return
 		}
 
