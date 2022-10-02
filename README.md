@@ -20,7 +20,7 @@ AWS account (either given a `--profile` or using the default) and attempts
 to find a matching owner.
 
 ```bash
-ascot find-access-key-owner --access-key-id AKIA123...
+ascot access-key-owner --access-key-id AKIA123...
 ```
 
 If an owner is found, the ARN of the IAM user is displayed.

@@ -13,11 +13,11 @@ import (
 )
 
 func init() {
-	rootCmd.AddCommand(findaccesskeyownerCmd)
+	rootCmd.AddCommand(accessKeyOwnerCmd)
 }
 
-var findaccesskeyownerCmd = &cobra.Command{
-	Use:   "find-access-key-owner [access key id]",
+var accessKeyOwnerCmd = &cobra.Command{
+	Use:   "access-key-owner [access key id]",
 	Short: "Finds the owner of a given AWS access key id",
 	Long:  `Given an AWS access key, prints the details of the key or nothing if no match`,
 	Args: func(cmd *cobra.Command, args []string) error {
