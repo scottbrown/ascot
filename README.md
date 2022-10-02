@@ -28,6 +28,17 @@ If an owner is found, the ARN of the IAM user is displayed.
 **It is recommended to have unrestricted `iam:ListUser` privileges in the
 AWS account in order to ensure all users are searched.**
 
+### List all Active AWS Regions
+
+Returns an alphabetical list of the regions that are active within the
+AWS account.  This is helpful when needing to iterate over all regions
+looking for a particular resource (e.g. listing all EC2 instances in all
+regions).
+
+```bash
+ascot active-regions
+```
+
 ## Contributing
 
 Any help is appreciated.  Please put your changes in a branch and then
