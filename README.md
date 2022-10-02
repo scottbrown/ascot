@@ -13,6 +13,17 @@ investigation being performed.
 
 ## Features
 
+### Figure out who you are
+
+Running `ascot` with no arguments will print out the ARN of the user you
+have authenticated with (or assumed, when using a role).
+
+```bash
+$ ascot
+AWS login was successful.
+You are currently logged in as arn:aws:iam::012345678901:user/johndoe
+```
+
 ### Find the Owner of a given AWS Access Key ID
 
 Given an AWS Access Key ID, this command searches all IAM users in your

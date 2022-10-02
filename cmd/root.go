@@ -1,8 +1,13 @@
 package cmd
 
 import (
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/sts"
+	"github.com/charmbracelet/lipgloss"
 	"github.com/spf13/cobra"
 
+	"context"
 	"fmt"
 	"os"
 )
@@ -14,6 +19,52 @@ var rootCmd = &cobra.Command{
           security operations and GRC (compliance) teams often
           need to use.`,
 	Run: func(cmd *cobra.Command, args []string) {
+		var cfg aws.Config
+		var err error
+
+		if ShowRequiredPermissions {
+			fmt.Println("iam:ListAccessKeys")
+			fmt.Println("iam:ListUsers")
+			return
+		}
+
+		if Profile != "" {
+			cfg, err = config.LoadDefaultConfig(context.TODO(),
+				config.WithRegion(DEFAULT_REGION),
+				config.WithSharedConfigProfile(Profile),
+			)
+			if err != nil {
+				fmt.Println(err)
+				os.Exit(1)
+			}
+		} else {
+			// use the default profile
+			cfg, err = config.LoadDefaultConfig(context.TODO(),
+				config.WithRegion(DEFAULT_REGION),
+			)
+			if err != nil {
+				fmt.Println("AWS login failed")
+				fmt.Println(err)
+				os.Exit(1)
+			}
+		}
+
+		client := sts.NewFromConfig(cfg)
+
+		resp, err := client.GetCallerIdentity(context.TODO(),
+			&sts.GetCallerIdentityInput{},
+		)
+
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+
+		highlightStyle := lipgloss.NewStyle().
+			Foreground(lipgloss.AdaptiveColor{Light: "12", Dark: "86"})
+
+		fmt.Println("AWS login was successful.")
+		fmt.Printf("You are currently logged in as %s\n", highlightStyle.Render(*resp.Arn))
 	},
 }
 
