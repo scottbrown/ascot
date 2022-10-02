@@ -4,6 +4,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/iam"
+	"github.com/charmbracelet/lipgloss"
 	"github.com/spf13/cobra"
 
 	"context"
@@ -12,9 +13,18 @@ import (
 	"os"
 )
 
+var headingStyle = lipgloss.NewStyle().
+	Bold(true).
+	Foreground(lipgloss.AdaptiveColor{Light: "12", Dark: "86"})
+
 func init() {
 	rootCmd.AddCommand(accessKeyOwnerCmd)
 }
+
+var alertStyle = lipgloss.NewStyle().
+	Bold(true).
+	Foreground(lipgloss.Color("#FFFFFF")).
+	Background(lipgloss.Color("#FF0000"))
 
 var accessKeyOwnerCmd = &cobra.Command{
 	Use:   "access-key-owner [access key id]",
@@ -97,10 +107,12 @@ var accessKeyOwnerCmd = &cobra.Command{
 
 			for _, key := range resp.AccessKeyMetadata {
 				if *key.AccessKeyId == accessKeyId {
-					fmt.Printf("AccessKeyId: %s\n", *key.AccessKeyId)
-					fmt.Printf("Username: %s\n", *key.UserName)
-					fmt.Printf("Create Date: %v\n", key.CreateDate)
-					fmt.Printf("Status: %s\n", key.Status)
+					if key.Status == "Active" {
+						fmt.Println(alertStyle.Render("This key is active"))
+					}
+					fmt.Printf("%s %s\n", headingStyle.Render("Username:"), *key.UserName)
+					fmt.Printf("%s %v\n", headingStyle.Render("Create Date:"), key.CreateDate)
+					fmt.Printf("%s %s\n", headingStyle.Render("Status:"), key.Status)
 				}
 			}
 		}
