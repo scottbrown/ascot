@@ -23,7 +23,9 @@ to find a matching owner.
 ascot access-key-owner --access-key-id AKIA123...
 ```
 
-If an owner is found, the ARN of the IAM user is displayed.
+If an owner is found, the ARN of the IAM user is displayed.  If the key
+is active, which is presents a risk during a key exposure incident, the
+output displays an alert.
 
 **It is recommended to have unrestricted `iam:ListUser` privileges in the
 AWS account in order to ensure all users are searched.**
