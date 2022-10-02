@@ -18,3 +18,8 @@ supply-chain:
 .PHONY: sast
 sast:
 	gosec ./...
+
+.PHONY: sbom
+sbom:
+	spdx-sbom-generator
+	cyclonedx-gomod app --json=true --licenses=true > sbom.cyclonedx.json
