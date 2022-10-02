@@ -79,10 +79,10 @@ var findaccesskeyownerCmd = &cobra.Command{
 			marker = resp.Marker
 		}
 
-		for _, username := range users {
+		for i := range users {
 			resp, err := client.ListAccessKeys(context.TODO(),
 				&iam.ListAccessKeysInput{
-					UserName: &username,
+					UserName: &users[i],
 				},
 			)
 
