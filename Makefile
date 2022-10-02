@@ -23,3 +23,7 @@ sast:
 sbom:
 	spdx-sbom-generator
 	cyclonedx-gomod app --json=true --licenses=true > sbom.cyclonedx.json
+
+.PHONY: test
+test:
+	go test ./...
