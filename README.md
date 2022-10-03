@@ -52,6 +52,18 @@ regions).
 ascot active-regions
 ```
 
+### Audit Default VPCs
+
+Allows you to see which regions in the AWS account still allow their
+default VPCs to exist.
+
+```bash
+ascot audit-default-vpcs
+```
+
+If a default VPC exists in the region, the result is `FAIL`.  Otherwise,
+the region receives a `PASS`.
+
 ## Contributing
 
 Any help is appreciated.  Please put your changes in a branch and then
