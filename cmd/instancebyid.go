@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"github.com/aws/aws-sdk-go-v2/aws"
-	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
 	"github.com/spf13/cobra"
@@ -10,7 +9,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"os"
 )
 
 var instanceByIdCmd = &cobra.Command{
@@ -25,69 +23,32 @@ var instanceByIdCmd = &cobra.Command{
 		return nil
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
-		var cfg aws.Config
-		var err error
-
 		if ShowRequiredPermissions {
 			fmt.Println("ec2:DescribeRegions")
 			fmt.Println("ec2:DescribeInstances")
 			return nil
 		}
 
-		if Profile != "" {
-			cfg, err = config.LoadDefaultConfig(context.TODO(),
-				config.WithRegion(DEFAULT_REGION),
-				config.WithSharedConfigProfile(Profile),
-			)
-			if err != nil {
-				fmt.Println(err)
-				os.Exit(1)
-			}
-		} else {
-			// use the default profile
-			cfg, err = config.LoadDefaultConfig(context.TODO(),
-				config.WithRegion(DEFAULT_REGION),
-			)
-			if err != nil {
-				fmt.Println(err)
-				os.Exit(1)
-			}
-		}
-
-		instanceId := args[0]
-
-		client := ec2.NewFromConfig(cfg)
-
-		resp, err := client.DescribeRegions(context.TODO(),
-			&ec2.DescribeRegionsInput{},
-		)
-
+		cfg, err := getAWSConfig(DEFAULT_REGION, Profile)
 		if err != nil {
 			return err
 		}
 
-		for _, region := range resp.Regions {
+		instanceId := args[0]
+
+		regions, err := getAllRegions(cfg)
+		if err != nil {
+			return err
+		}
+
+		for _, region := range regions {
 			// connect to another region
-			if Profile != "" {
-				cfg, err = config.LoadDefaultConfig(context.TODO(),
-					config.WithRegion(*region.RegionName),
-					config.WithSharedConfigProfile(Profile),
-				)
-				if err != nil {
-					fmt.Println(err)
-					os.Exit(1)
-				}
-			} else {
-				// use the default profile
-				cfg, err = config.LoadDefaultConfig(context.TODO(),
-					config.WithRegion(*region.RegionName),
-				)
-				if err != nil {
-					fmt.Println(err)
-					os.Exit(1)
-				}
+			regional_cfg, err := getAWSConfig(*region.RegionName, Profile)
+			if err != nil {
+				return err
 			}
-			regional_client := ec2.NewFromConfig(cfg)
+
+			regional_client := ec2.NewFromConfig(regional_cfg)
 			resp, err := regional_client.DescribeInstances(context.TODO(),
 				&ec2.DescribeInstancesInput{
 					Filters: []types.Filter{

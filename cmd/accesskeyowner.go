@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"github.com/aws/aws-sdk-go-v2/aws"
-	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/iam"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/spf13/cobra"
@@ -10,7 +8,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"os"
 )
 
 var headingStyle = lipgloss.NewStyle().
@@ -37,34 +34,17 @@ var accessKeyOwnerCmd = &cobra.Command{
 
 		return nil
 	},
-	Run: func(cmd *cobra.Command, args []string) {
-		var cfg aws.Config
-		var err error
-
+	RunE: func(cmd *cobra.Command, args []string) error {
 		if ShowRequiredPermissions {
 			fmt.Println("iam:ListAccessKeys")
 			fmt.Println("iam:ListUsers")
-			return
+			return nil
 		}
 
-		if Profile != "" {
-			cfg, err = config.LoadDefaultConfig(context.TODO(),
-				config.WithRegion(DEFAULT_REGION),
-				config.WithSharedConfigProfile(Profile),
-			)
-			if err != nil {
-				fmt.Println(err)
-				os.Exit(1)
-			}
-		} else {
-			// use the default profile
-			cfg, err = config.LoadDefaultConfig(context.TODO(),
-				config.WithRegion(DEFAULT_REGION),
-			)
-			if err != nil {
-				fmt.Println(err)
-				os.Exit(1)
-			}
+		cfg, err := getAWSConfig(DEFAULT_REGION, Profile)
+
+		if err != nil {
+			return err
 		}
 
 		accessKeyId := args[0]
@@ -78,8 +58,7 @@ var accessKeyOwnerCmd = &cobra.Command{
 				Marker: marker,
 			})
 			if err != nil {
-				fmt.Println(err)
-				os.Exit(1)
+				return err
 			}
 
 			for _, u := range resp.Users {
@@ -101,8 +80,7 @@ var accessKeyOwnerCmd = &cobra.Command{
 			)
 
 			if err != nil {
-				fmt.Println(err)
-				os.Exit(1)
+				return err
 			}
 
 			for _, key := range resp.AccessKeyMetadata {
@@ -116,5 +94,7 @@ var accessKeyOwnerCmd = &cobra.Command{
 				}
 			}
 		}
+
+		return nil
 	},
 }

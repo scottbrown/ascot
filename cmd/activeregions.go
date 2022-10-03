@@ -3,7 +3,6 @@ package cmd
 import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
-	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/spf13/cobra"
 
 	"context"
@@ -45,19 +44,14 @@ var activeRegionsCmd = &cobra.Command{
 			}
 		}
 
-		client := ec2.NewFromConfig(cfg)
-
-		resp, err := client.DescribeRegions(context.TODO(),
-			&ec2.DescribeRegionsInput{},
-		)
-
+		regions, err := getAllRegions(cfg)
 		if err != nil {
 			return err
 		}
 
 		var regionNames []string
 
-		for _, region := range resp.Regions {
+		for _, region := range regions {
 			regionNames = append(regionNames, *region.RegionName)
 		}
 
