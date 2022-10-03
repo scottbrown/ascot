@@ -10,7 +10,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-  "os"
+	"os"
 )
 
 var instanceByIdCmd = &cobra.Command{
@@ -126,7 +126,7 @@ var instanceByIdCmd = &cobra.Command{
 			}
 		}
 
-    return nil
+		return nil
 	},
 }
 
