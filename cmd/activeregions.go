@@ -24,6 +24,14 @@ var activeRegionsCmd = &cobra.Command{
 			return nil
 		}
 
+		if HowItWorks {
+			fmt.Println(headingStyle.Render("Logic:"))
+			fmt.Println("- Call ec2:DescribeRegions")
+			fmt.Println("- Loop through each region")
+			fmt.Println("- Print the region name")
+			return nil
+		}
+
 		if Profile != "" {
 			cfg, err = config.LoadDefaultConfig(context.TODO(),
 				config.WithRegion(DEFAULT_REGION),

@@ -2,7 +2,15 @@
 
 This is a single-binary tool that can be easily used by GRC (Compliance)
 and Security Operations teams if they need to support AWS infrastructure
-but don't have good experience yet with the AWS CLI.
+but don't have good experience yet with the AWS CLI.  This tool is intended
+to complement the use of AWS CLI, not replace it.
+
+This tool is also intended as a learning tool, for those that lack the
+experience in AWS.  You can find what IAM permissions are needed for a
+command by running `ascot [COMMAND] --show-required-permissions`.  You
+can also run `ascot [COMMAND] --how-it-works` in order to understand the
+business logic being run, which can aid you when you want to use the
+AWS CLI directly instead of this tool.
 
 Most, if not all, of the commands in this tool can also be done with
 the AWS CLI and some `bash`, but not everyone is comfortable in this
@@ -11,7 +19,9 @@ environment.  This tool solves for that.
 The tool is built to have multiple sub-commands, one for each type of
 investigation being performed.
 
-## Features
+# Features
+
+A list of all supported commands can be found by runnning `ascot -h`.
 
 ### Figure out who you are
 
@@ -63,6 +73,21 @@ ascot audit-default-vpcs
 
 If a default VPC exists in the region, the result is `FAIL`.  Otherwise,
 the region receives a `PASS`.
+
+### Missing Images
+
+Lists any EC2 instances that are using AMIs that no longer exist.  This
+means if the EC2 instance needs to be rebuilt, it will fail because it
+depends on an AMI that cannot be found.
+
+This searches all regions.
+
+```bash
+ascot missing-images
+```
+
+The output is a list of instance IDs that are affected by the missing
+AMI, and the AMI ID that is missing.
 
 ## Contributing
 

@@ -27,6 +27,16 @@ var rootCmd = &cobra.Command{
 			return
 		}
 
+		if HowItWorks {
+			fmt.Println(headingStyle.Render("Logic:"))
+			fmt.Println("- Call sts:GetCallerIdentity")
+			fmt.Println("- Return the Arn.")
+			fmt.Println("")
+			fmt.Println(headingStyle.Render("Notes:"))
+			fmt.Println("- It requires no permissions to use, making it safe to check whether the authentication to AWS was successful.")
+			return
+		}
+
 		if Profile != "" {
 			cfg, err = config.LoadDefaultConfig(context.TODO(),
 				config.WithRegion(DEFAULT_REGION),

@@ -26,6 +26,16 @@ var auditDefaultVpcsCmd = &cobra.Command{
 			return nil
 		}
 
+		if HowItWorks {
+			fmt.Println(headingStyle.Render("Logic:"))
+			fmt.Println("- Call ec2:DescribeRegions")
+			fmt.Println("- Loop through each region")
+			fmt.Println("- Call ec2:DescribeVpcs, filtering by is-default")
+			fmt.Println("- Print FAIL if any VPCs were returned")
+			fmt.Println("- Otherwise PASS")
+			return nil
+		}
+
 		cfg, err := getAWSConfig(DEFAULT_REGION, Profile)
 		if err != nil {
 			return err

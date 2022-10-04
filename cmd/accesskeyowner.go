@@ -41,6 +41,15 @@ var accessKeyOwnerCmd = &cobra.Command{
 			return nil
 		}
 
+		if HowItWorks {
+			fmt.Println(headingStyle.Render("Logic:"))
+			fmt.Println("- Call iam:ListUsers")
+			fmt.Println("- Loop through each user")
+			fmt.Println("- Call iam:ListAccessKeys for the user")
+			fmt.Println("- Find a match with the given key")
+			return nil
+		}
+
 		cfg, err := getAWSConfig(DEFAULT_REGION, Profile)
 
 		if err != nil {

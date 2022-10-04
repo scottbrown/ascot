@@ -29,6 +29,15 @@ var instanceByIdCmd = &cobra.Command{
 			return nil
 		}
 
+		if HowItWorks {
+			fmt.Println(headingStyle.Render("Logic:"))
+			fmt.Println("- Call ec2:DescribeRegions")
+			fmt.Println("- Loop through each region")
+			fmt.Println("- Call ec2:DescribeInstances, filtering by instance-id")
+			fmt.Println("- Print instance details if matched with given id")
+			return nil
+		}
+
 		cfg, err := getAWSConfig(DEFAULT_REGION, Profile)
 		if err != nil {
 			return err
