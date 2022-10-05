@@ -1,8 +1,9 @@
-package cmd
+package main
 
 import (
 	"github.com/aws/aws-sdk-go-v2/service/iam"
 	"github.com/charmbracelet/lipgloss"
+	"github.com/scottbrown/ascot"
 	"github.com/spf13/cobra"
 
 	"context"
@@ -56,7 +57,7 @@ var accessKeyOwnerCmd = &cobra.Command{
 			return nil
 		}
 
-		cfg, err := getAWSConfig(DEFAULT_REGION, Profile)
+		cfg, err := ascot.GetAWSConfig(ascot.DEFAULT_REGION, Profile)
 
 		if err != nil {
 			return err

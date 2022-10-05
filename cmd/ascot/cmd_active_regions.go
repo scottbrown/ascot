@@ -1,13 +1,10 @@
-package cmd
+package main
 
 import (
-	"github.com/aws/aws-sdk-go-v2/aws"
-	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/scottbrown/ascot"
 	"github.com/spf13/cobra"
 
-	"context"
 	"fmt"
-	"os"
 	"sort"
 )
 
@@ -18,9 +15,6 @@ var activeRegionsCmd = &cobra.Command{
 	Short: "Lists the regions active in the AWS account.",
 	Long:  `Reports each region that is listed as active in IAM in the given AWS account.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		var cfg aws.Config
-		var err error
-
 		if ShowRequiredPermissions {
 			printRequiredPermissions(activeRegionsCmdPrivs)
 			return nil
@@ -34,27 +28,12 @@ var activeRegionsCmd = &cobra.Command{
 			return nil
 		}
 
-		if Profile != "" {
-			cfg, err = config.LoadDefaultConfig(context.TODO(),
-				config.WithRegion(DEFAULT_REGION),
-				config.WithSharedConfigProfile(Profile),
-			)
-			if err != nil {
-				fmt.Println(err)
-				os.Exit(1)
-			}
-		} else {
-			// use the default profile
-			cfg, err = config.LoadDefaultConfig(context.TODO(),
-				config.WithRegion(DEFAULT_REGION),
-			)
-			if err != nil {
-				fmt.Println(err)
-				os.Exit(1)
-			}
+		cfg, err := ascot.GetAWSConfig(ascot.DEFAULT_REGION, Profile)
+		if err != nil {
+			return err
 		}
 
-		regions, err := getAllRegions(cfg)
+		regions, err := ascot.GetAllRegions(cfg)
 		if err != nil {
 			return err
 		}

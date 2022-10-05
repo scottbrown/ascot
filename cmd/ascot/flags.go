@@ -1,4 +1,4 @@
-package cmd
+package main
 
 var Profile string
 var ShowRequiredPermissions bool

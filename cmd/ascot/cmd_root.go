@@ -1,10 +1,9 @@
-package cmd
+package main
 
 import (
-	"github.com/aws/aws-sdk-go-v2/aws"
-	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/sts"
 	"github.com/charmbracelet/lipgloss"
+	"github.com/scottbrown/ascot"
 	"github.com/spf13/cobra"
 
 	"context"
@@ -18,13 +17,10 @@ var rootCmd = &cobra.Command{
 	Long: `A suite of various tools to inspect AWS resources that
           security operations and GRC (compliance) teams often
           need to use.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		var cfg aws.Config
-		var err error
-
+	RunE: func(cmd *cobra.Command, args []string) error {
 		if ShowRequiredPermissions {
 			printRequiredPermissions([]string{"none"})
-			return
+			return nil
 		}
 
 		if HowItWorks {
@@ -34,28 +30,12 @@ var rootCmd = &cobra.Command{
 			fmt.Println("")
 			fmt.Println(headingStyle.Render("Notes:"))
 			fmt.Println("- It requires no permissions to use, making it safe to check whether the authentication to AWS was successful.")
-			return
+			return nil
 		}
 
-		if Profile != "" {
-			cfg, err = config.LoadDefaultConfig(context.TODO(),
-				config.WithRegion(DEFAULT_REGION),
-				config.WithSharedConfigProfile(Profile),
-			)
-			if err != nil {
-				fmt.Println(err)
-				os.Exit(1)
-			}
-		} else {
-			// use the default profile
-			cfg, err = config.LoadDefaultConfig(context.TODO(),
-				config.WithRegion(DEFAULT_REGION),
-			)
-			if err != nil {
-				fmt.Println("AWS login failed")
-				fmt.Println(err)
-				os.Exit(1)
-			}
+		cfg, err := ascot.GetAWSConfig(ascot.DEFAULT_REGION, Profile)
+		if err != nil {
+			return err
 		}
 
 		client := sts.NewFromConfig(cfg)
@@ -65,8 +45,7 @@ var rootCmd = &cobra.Command{
 		)
 
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			return err
 		}
 
 		highlightStyle := lipgloss.NewStyle().
@@ -74,6 +53,8 @@ var rootCmd = &cobra.Command{
 
 		fmt.Println("AWS login was successful.")
 		fmt.Printf("You are currently logged in as %s\n", highlightStyle.Render(*resp.Arn))
+
+		return nil
 	},
 }
 

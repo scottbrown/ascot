@@ -1,9 +1,10 @@
-package cmd
+package main
 
 import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
+	"github.com/scottbrown/ascot"
 	"github.com/spf13/cobra"
 
 	"context"
@@ -39,21 +40,21 @@ var instanceByIdCmd = &cobra.Command{
 			return nil
 		}
 
-		cfg, err := getAWSConfig(DEFAULT_REGION, Profile)
+		cfg, err := ascot.GetAWSConfig(ascot.DEFAULT_REGION, Profile)
 		if err != nil {
 			return err
 		}
 
 		instanceId := args[0]
 
-		regions, err := getAllRegions(cfg)
+		regions, err := ascot.GetAllRegions(cfg)
 		if err != nil {
 			return err
 		}
 
 		for _, region := range regions {
 			// connect to another region
-			regional_cfg, err := getAWSConfig(*region.RegionName, Profile)
+			regional_cfg, err := ascot.GetAWSConfig(*region.RegionName, Profile)
 			if err != nil {
 				return err
 			}

@@ -1,4 +1,4 @@
-package cmd
+package ascot
 
 import (
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -9,7 +9,7 @@ import (
 	"context"
 )
 
-func getAWSConfig(region string, profile string) (aws.Config, error) {
+func GetAWSConfig(region string, profile string) (aws.Config, error) {
 	var cfg aws.Config
 	var err error
 
@@ -34,7 +34,7 @@ func getAWSConfig(region string, profile string) (aws.Config, error) {
 	return cfg, nil
 }
 
-func getAllRegions(cfg aws.Config) ([]types.Region, error) {
+func GetAllRegions(cfg aws.Config) ([]types.Region, error) {
 	client := ec2.NewFromConfig(cfg)
 
 	resp, err := client.DescribeRegions(context.TODO(),
