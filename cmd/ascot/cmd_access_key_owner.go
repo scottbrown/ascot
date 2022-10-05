@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/aws/aws-sdk-go-v2/service/iam"
-	"github.com/charmbracelet/lipgloss"
 	"github.com/scottbrown/ascot"
 	"github.com/spf13/cobra"
 
@@ -13,10 +12,6 @@ import (
 
 var accessKeyOwnerCmdPrivs []string
 
-var headingStyle = lipgloss.NewStyle().
-	Bold(true).
-	Foreground(lipgloss.AdaptiveColor{Light: "12", Dark: "86"})
-
 func init() {
 	rootCmd.AddCommand(accessKeyOwnerCmd)
 
@@ -25,11 +20,6 @@ func init() {
 		"iam:ListUsers",
 	}
 }
-
-var alertStyle = lipgloss.NewStyle().
-	Bold(true).
-	Foreground(lipgloss.Color("#FFFFFF")).
-	Background(lipgloss.Color("#FF0000"))
 
 var accessKeyOwnerCmd = &cobra.Command{
 	Use:   "access-key-owner [access key id]",

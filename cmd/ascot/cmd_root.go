@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/aws/aws-sdk-go-v2/service/sts"
-	"github.com/charmbracelet/lipgloss"
 	"github.com/scottbrown/ascot"
 	"github.com/spf13/cobra"
 
@@ -47,9 +46,6 @@ var rootCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-
-		highlightStyle := lipgloss.NewStyle().
-			Foreground(lipgloss.AdaptiveColor{Light: "12", Dark: "86"})
 
 		fmt.Println("AWS login was successful.")
 		fmt.Printf("You are currently logged in as %s\n", highlightStyle.Render(*resp.Arn))

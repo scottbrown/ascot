@@ -4,7 +4,6 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
-	"github.com/charmbracelet/lipgloss"
 	"github.com/scottbrown/ascot"
 	"github.com/spf13/cobra"
 
@@ -76,9 +75,6 @@ var auditDefaultVpcsCmd = &cobra.Command{
 			if err != nil {
 				return err
 			}
-
-			passStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#00FF00"))
-			failStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#FF0000"))
 
 			if len(resp.Vpcs) > 0 {
 				fmt.Printf("[%s] %s\n", failStyle.Render("FAIL"), *region.RegionName)
