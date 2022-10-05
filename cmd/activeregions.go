@@ -11,6 +11,8 @@ import (
 	"sort"
 )
 
+var activeRegionsCmdPrivs []string
+
 var activeRegionsCmd = &cobra.Command{
 	Use:   "active-regions",
 	Short: "Lists the regions active in the AWS account.",
@@ -20,7 +22,7 @@ var activeRegionsCmd = &cobra.Command{
 		var err error
 
 		if ShowRequiredPermissions {
-			fmt.Println("ec2:DescribeRegions")
+			printRequiredPermissions(activeRegionsCmdPrivs)
 			return nil
 		}
 
@@ -75,4 +77,8 @@ var activeRegionsCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(activeRegionsCmd)
+
+	activeRegionsCmdPrivs = []string{
+		"ec2:DescribeRegions",
+	}
 }

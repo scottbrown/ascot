@@ -11,8 +11,15 @@ import (
 	"fmt"
 )
 
+var auditDefaultVpcsCmdPrivs []string
+
 func init() {
 	rootCmd.AddCommand(auditDefaultVpcsCmd)
+
+	auditDefaultVpcsCmdPrivs = []string{
+		"ec2:DescribeRegions",
+		"ec2:DescribeVpcs",
+	}
 }
 
 var auditDefaultVpcsCmd = &cobra.Command{
@@ -21,8 +28,7 @@ var auditDefaultVpcsCmd = &cobra.Command{
 	Long:  `Default VPCs are not intended to be used, and should not exist in any AWS region.  This command verifies whether they exist in a region (FAIL) or have been removed (PASS)`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if ShowRequiredPermissions {
-			fmt.Println("ec2:DescribeRegions")
-			fmt.Println("ec2:DescribeVpcs")
+			printRequiredPermissions(auditDefaultVpcsCmdPrivs)
 			return nil
 		}
 

@@ -23,7 +23,7 @@ var rootCmd = &cobra.Command{
 		var err error
 
 		if ShowRequiredPermissions {
-			fmt.Println("none")
+			printRequiredPermissions([]string{"none"})
 			return
 		}
 
@@ -81,5 +81,11 @@ func Execute() {
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
+	}
+}
+
+func printRequiredPermissions(privs []string) {
+	for _, priv := range privs {
+		fmt.Println(priv)
 	}
 }

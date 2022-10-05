@@ -11,6 +11,8 @@ import (
 	"fmt"
 )
 
+var instanceByIdCmdPrivs []string
+
 var instanceByIdCmd = &cobra.Command{
 	Use:   "instance-by-id [instance-id]",
 	Short: "Finds the instance in any region by its ID",
@@ -24,8 +26,7 @@ var instanceByIdCmd = &cobra.Command{
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if ShowRequiredPermissions {
-			fmt.Println("ec2:DescribeRegions")
-			fmt.Println("ec2:DescribeInstances")
+			printRequiredPermissions(instanceByIdCmdPrivs)
 			return nil
 		}
 
@@ -102,4 +103,9 @@ var instanceByIdCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(instanceByIdCmd)
+
+	instanceByIdCmdPrivs = []string{
+		"ec2:DescribeRegions",
+		"ec2:DescribeInstances",
+	}
 }

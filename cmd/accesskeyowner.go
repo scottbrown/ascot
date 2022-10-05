@@ -10,12 +10,19 @@ import (
 	"fmt"
 )
 
+var accessKeyOwnerCmdPrivs []string
+
 var headingStyle = lipgloss.NewStyle().
 	Bold(true).
 	Foreground(lipgloss.AdaptiveColor{Light: "12", Dark: "86"})
 
 func init() {
 	rootCmd.AddCommand(accessKeyOwnerCmd)
+
+	accessKeyOwnerCmdPrivs = []string{
+		"iam:ListAccessKeys",
+		"iam:ListUsers",
+	}
 }
 
 var alertStyle = lipgloss.NewStyle().
@@ -36,8 +43,7 @@ var accessKeyOwnerCmd = &cobra.Command{
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if ShowRequiredPermissions {
-			fmt.Println("iam:ListAccessKeys")
-			fmt.Println("iam:ListUsers")
+			printRequiredPermissions(accessKeyOwnerCmdPrivs)
 			return nil
 		}
 
