@@ -6,7 +6,7 @@ require (
 	github.com/aws/aws-sdk-go-v2 v1.16.16
 	github.com/aws/aws-sdk-go-v2/config v1.17.8
 	github.com/aws/aws-sdk-go-v2/service/ec2 v1.63.1
-	github.com/aws/aws-sdk-go-v2/service/iam v1.18.19
+	github.com/aws/aws-sdk-go-v2/service/iam v1.18.20
 	github.com/aws/aws-sdk-go-v2/service/sts v1.16.19
 	github.com/charmbracelet/lipgloss v0.6.0
 	github.com/spf13/cobra v1.6.0
