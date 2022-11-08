@@ -1,5 +1,10 @@
 # ascot - AWS Security Compliance and Operations Toolkit
 
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=scottbrown_ascot&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=scottbrown_ascot)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=scottbrown_ascot&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=scottbrown_ascot)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=scottbrown_ascot&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=scottbrown_ascot)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=scottbrown_ascot&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=scottbrown_ascot)
+
 This is a single-binary tool that can be easily used by GRC (Compliance)
 and Security Operations teams if they need to support AWS infrastructure
 but don't have good experience yet with the AWS CLI.  This tool is intended
