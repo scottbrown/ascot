@@ -11,6 +11,8 @@ import (
 
 var instanceByIdCmdPrivs []string
 
+const fancyPrint string = "%s: %s\n"
+
 var instanceByIdCmd = &cobra.Command{
 	Use:   "instance-by-id [instance-id]",
 	Short: "Finds the instance in any region by its ID",
@@ -67,19 +69,19 @@ var instanceByIdCmd = &cobra.Command{
 			}
 
 			if instance.InstanceId != nil {
-				fmt.Printf("%s: %s\n", headingStyle.Render("Region"), *region.RegionName)
-				fmt.Printf("%s: %s\n", headingStyle.Render("Instance ID"), *instance.InstanceId)
-				fmt.Printf("%s: %s\n", headingStyle.Render("Public IP Address"), *instance.PublicIpAddress)
-				fmt.Printf("%s: %s\n", headingStyle.Render("Private IP Address"), *instance.PrivateIpAddress)
-				fmt.Printf("%s: %s\n", headingStyle.Render("Image ID"), *instance.ImageId)
-				fmt.Printf("%s: %s\n", headingStyle.Render("Instance Type"), instance.InstanceType)
-				fmt.Printf("%s: %v\n", headingStyle.Render("Launch Time"), *instance.LaunchTime)
-				fmt.Printf("%s: %s\n", headingStyle.Render("State"), instance.State.Name)
-				fmt.Printf("%s: %s\n", headingStyle.Render("VPC"), *instance.VpcId)
-				fmt.Printf("%s: %s\n", headingStyle.Render("Subnet"), *instance.SubnetId)
+				fmt.Printf(fancyPrint, headingStyle.Render("Region"), *region.RegionName)
+				fmt.Printf(fancyPrint, headingStyle.Render("Instance ID"), *instance.InstanceId)
+				fmt.Printf(fancyPrint, headingStyle.Render("Public IP Address"), *instance.PublicIpAddress)
+				fmt.Printf(fancyPrint, headingStyle.Render("Private IP Address"), *instance.PrivateIpAddress)
+				fmt.Printf(fancyPrint, headingStyle.Render("Image ID"), *instance.ImageId)
+				fmt.Printf(fancyPrint, headingStyle.Render("Instance Type"), instance.InstanceType)
+				fmt.Printf(fancyPrint, headingStyle.Render("Launch Time"), *instance.LaunchTime)
+				fmt.Printf(fancyPrint, headingStyle.Render("State"), instance.State.Name)
+				fmt.Printf(fancyPrint, headingStyle.Render("VPC"), *instance.VpcId)
+				fmt.Printf(fancyPrint, headingStyle.Render("Subnet"), *instance.SubnetId)
 				fmt.Printf("%s:\n", headingStyle.Render("Tags"))
 				for _, tag := range instance.Tags {
-					fmt.Printf("%s: %s\n", headingStyle.Render(*tag.Key), *tag.Value)
+					fmt.Printf(fancyPrint, headingStyle.Render(*tag.Key), *tag.Value)
 				}
 			}
 		}
