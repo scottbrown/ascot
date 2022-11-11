@@ -5,20 +5,12 @@ import (
 	"github.com/scottbrown/ascot"
 	"github.com/spf13/cobra"
 
-	"context"
 	"errors"
 	"fmt"
 )
 
-var accessKeyOwnerCmdPrivs []string
-
 func init() {
 	rootCmd.AddCommand(accessKeyOwnerCmd)
-
-	accessKeyOwnerCmdPrivs = []string{
-		"iam:ListAccessKeys",
-		"iam:ListUsers",
-	}
 }
 
 var accessKeyOwnerCmd = &cobra.Command{
@@ -26,24 +18,22 @@ var accessKeyOwnerCmd = &cobra.Command{
 	Short: "Finds the owner of a given AWS access key id",
 	Long:  `Given an AWS access key, prints the details of the key or nothing if no match`,
 	Args: func(cmd *cobra.Command, args []string) error {
-		if !ShowRequiredPermissions && len(args) < 1 {
+		if !ShowRequiredPermissions && !HowItWorks && len(args) < 1 {
 			return errors.New("Missing required argument: access key id")
 		}
 
 		return nil
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
+		var runner ascot.AccessKeyOwnerRunner
+
 		if ShowRequiredPermissions {
-			printRequiredPermissions(accessKeyOwnerCmdPrivs)
+			printRequiredPermissions(runner.RequiredPermissions())
 			return nil
 		}
 
 		if HowItWorks {
-			fmt.Println(headingStyle.Render("Logic:"))
-			fmt.Println("- Call iam:ListUsers")
-			fmt.Println("- Loop through each user")
-			fmt.Println("- Call iam:ListAccessKeys for the user")
-			fmt.Println("- Find a match with the given key")
+			printHowItWorks(runner.HowItWorks())
 			return nil
 		}
 
@@ -57,49 +47,20 @@ var accessKeyOwnerCmd = &cobra.Command{
 
 		client := iam.NewFromConfig(cfg)
 
-		var users []string
-		var marker *string
-		for {
-			resp, err := client.ListUsers(context.TODO(), &iam.ListUsersInput{
-				Marker: marker,
-			})
-			if err != nil {
-				return err
-			}
+		runner.ListUsersClient = client
+		runner.ListAccessKeysClient = client
+		runner.AccessKeyId = accessKeyId
 
-			for _, u := range resp.Users {
-				users = append(users, *u.UserName)
-			}
-
-			if !resp.IsTruncated {
-				break
-			}
-
-			marker = resp.Marker
+		key, err := runner.Run()
+		if err != nil {
+			return err
 		}
-
-		for i := range users {
-			resp, err := client.ListAccessKeys(context.TODO(),
-				&iam.ListAccessKeysInput{
-					UserName: &users[i],
-				},
-			)
-
-			if err != nil {
-				return err
-			}
-
-			for _, key := range resp.AccessKeyMetadata {
-				if *key.AccessKeyId == accessKeyId {
-					if key.Status == "Active" {
-						fmt.Println(alertStyle.Render("This key is active"))
-					}
-					fmt.Printf("%s %s\n", headingStyle.Render("Username:"), *key.UserName)
-					fmt.Printf("%s %v\n", headingStyle.Render("Create Date:"), key.CreateDate)
-					fmt.Printf("%s %s\n", headingStyle.Render("Status:"), key.Status)
-				}
-			}
+		if key.Status == "Active" {
+			fmt.Println(alertStyle.Render("This key is active"))
 		}
+		fmt.Printf("%s %s\n", headingStyle.Render("Username:"), *key.UserName)
+		fmt.Printf("%s %v\n", headingStyle.Render("Create Date:"), key.CreateDate)
+		fmt.Printf("%s %s\n", headingStyle.Render("Status:"), key.Status)
 
 		return nil
 	},

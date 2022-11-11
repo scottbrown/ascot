@@ -6,19 +6,22 @@ import (
 	"github.com/spf13/cobra"
 
 	"fmt"
+	"strings"
 )
 
 func init() {
-	rootCmd.AddCommand(auditDefaultVpcsCmd)
+	rootCmd.AddCommand(missingImagesCmd)
 }
 
-var auditDefaultVpcsCmd = &cobra.Command{
-	Use:   "audit-default-vpcs",
-	Short: "Validates whether default VPCs exist in all regions",
-	Long:  `Default VPCs are not intended to be used, and should not exist in any AWS region.  This command verifies whether they exist in a region (FAIL) or have been removed (PASS)`,
+var missingImagesCmdPrivs []string
+
+var missingImagesCmd = &cobra.Command{
+	Use:   "missing-images",
+	Short: "Lists any EC2 instances with missing AMIs",
+	Long:  `Finds if any EC2 instances are using an AMI that no longer exists, then lists them along with the missing AMI`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		var regionRunner ascot.ActiveRegionsRunner
-		var runner ascot.AuditDefaultVpcsRunner
+		var runner ascot.MissingImagesRunner
 
 		if ShowRequiredPermissions {
 			printRequiredPermissions(runner.RequiredPermissions())
@@ -37,6 +40,7 @@ var auditDefaultVpcsCmd = &cobra.Command{
 
 		client := ec2.NewFromConfig(cfg)
 		regionRunner.Client = *client
+
 		regions, err := regionRunner.Run()
 		if err != nil {
 			return err
@@ -49,17 +53,21 @@ var auditDefaultVpcsCmd = &cobra.Command{
 			}
 
 			regionalClient := ec2.NewFromConfig(regionalCfg)
-			runner.Client = regionalClient
+			runner.DescribeInstancesClient = regionalClient
+			runner.DescribeImagesClient = regionalClient
 
-			vpcs, err := runner.Run()
+			missingImages, err := runner.Run()
 			if err != nil {
 				return err
 			}
 
-			if len(vpcs) > 0 {
-				fmt.Printf("[%s] %s\n", failStyle.Render("FAIL"), *region.RegionName)
-			} else {
-				fmt.Printf("[%s] %s\n", passStyle.Render("PASS"), *region.RegionName)
+			// only print if missing AMIs exist
+			if len(missingImages) > 0 {
+				fmt.Printf("Region: %s\n", headingStyle.Render(*region.RegionName))
+				fmt.Println(headingStyle.Render("AMIs Missing:"))
+				for imageId, instanceIds := range missingImages {
+					fmt.Printf("%s: %s\n", imageId, strings.Join(instanceIds, ", "))
+				}
 			}
 		}
 

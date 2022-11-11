@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/scottbrown/ascot"
 	"github.com/spf13/cobra"
 
@@ -15,16 +16,15 @@ var activeRegionsCmd = &cobra.Command{
 	Short: "Lists the regions active in the AWS account.",
 	Long:  `Reports each region that is listed as active in IAM in the given AWS account.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
+		var runner ascot.ActiveRegionsRunner
+
 		if ShowRequiredPermissions {
-			printRequiredPermissions(activeRegionsCmdPrivs)
+			printRequiredPermissions(runner.RequiredPermissions())
 			return nil
 		}
 
 		if HowItWorks {
-			fmt.Println(headingStyle.Render("Logic:"))
-			fmt.Println("- Call ec2:DescribeRegions")
-			fmt.Println("- Loop through each region")
-			fmt.Println("- Print the region name")
+			printHowItWorks(runner.HowItWorks())
 			return nil
 		}
 
@@ -33,7 +33,10 @@ var activeRegionsCmd = &cobra.Command{
 			return err
 		}
 
-		regions, err := ascot.GetAllRegions(cfg)
+		client := ec2.NewFromConfig(cfg)
+		runner.Client = *client
+
+		regions, err := runner.Run()
 		if err != nil {
 			return err
 		}
@@ -56,8 +59,4 @@ var activeRegionsCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(activeRegionsCmd)
-
-	activeRegionsCmdPrivs = []string{
-		"ec2:DescribeRegions",
-	}
 }

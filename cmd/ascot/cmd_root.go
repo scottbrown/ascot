@@ -66,3 +66,19 @@ func printRequiredPermissions(privs []string) {
 		fmt.Println(priv)
 	}
 }
+
+func printHowItWorks(calls []string, notes []string) {
+	if len(calls) > 0 {
+		fmt.Println(headingStyle.Render("Logic:"))
+		for _, call := range calls {
+			fmt.Printf("- %s\n", call)
+		}
+	}
+
+	if len(notes) > 0 {
+		fmt.Println(headingStyle.Render("Notes:"))
+		for _, note := range notes {
+			fmt.Printf("- %s\n", note)
+		}
+	}
+}
