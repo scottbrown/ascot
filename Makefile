@@ -2,7 +2,7 @@
 
 .PHONY: build
 build:
-	go build -o .build/ascot github.com/scottbrown/ascot/cmd/ascot
+	go build -mod=readonly -o .build/ascot github.com/scottbrown/ascot/cmd/ascot
 
 .PHONY: fmt
 fmt:
