@@ -92,7 +92,7 @@ func (s AccessKeyOwnerRunner) Run() (iam_types.AccessKeyMetadata, error) {
 		marker = resp.Marker
 	}
 
-	var found_key iam_types.AccessKeyMetadata
+	var foundKey iam_types.AccessKeyMetadata
 	for i := range users {
 		resp, err := s.ListAccessKeysClient.ListAccessKeys(context.TODO(),
 			&iam.ListAccessKeysInput{
@@ -106,13 +106,13 @@ func (s AccessKeyOwnerRunner) Run() (iam_types.AccessKeyMetadata, error) {
 
 		for _, key := range resp.AccessKeyMetadata {
 			if *key.AccessKeyId == s.AccessKeyId {
-				found_key = key
+				foundKey = key
 				break
 			}
 		}
 	}
 
-	return found_key, nil
+	return foundKey, nil
 }
 
 func (AccessKeyOwnerRunner) RequiredPermissions() []string {

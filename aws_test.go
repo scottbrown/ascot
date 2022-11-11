@@ -8,6 +8,7 @@ type MockDescribeRegionsClient struct {
 }
 
 func TestActiveRegionsRunnerRun(t *testing.T) {
+  // TODO future test
 }
 
 func TestActiveRegionsRunnerRequiredPermissions(t *testing.T) {
