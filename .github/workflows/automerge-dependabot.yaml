@@ -3,6 +3,7 @@ on: pull_request
 
 jobs:
   automerge:
+    permissions: write-all
     runs-on: ubuntu-latest
     if: github.actor == 'dependabot[bot]'
     steps:
