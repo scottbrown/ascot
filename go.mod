@@ -9,7 +9,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/iam v1.19.9
 	github.com/aws/aws-sdk-go-v2/service/sts v1.18.8
 	github.com/charmbracelet/lipgloss v0.7.1
-	github.com/spf13/cobra v1.6.1
+	github.com/spf13/cobra v1.7.0
 )
 
 require (
@@ -23,7 +23,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/ssooidc v1.14.7 // indirect
 	github.com/aws/smithy-go v1.13.5 // indirect
 	github.com/aymanbagabas/go-osc52/v2 v2.0.1 // indirect
-	github.com/inconshreveable/mousetrap v1.0.1 // indirect
+	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
 	github.com/mattn/go-isatty v0.0.17 // indirect
