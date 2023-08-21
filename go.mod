@@ -5,7 +5,7 @@ go 1.19
 require (
 	github.com/aws/aws-sdk-go-v2 v1.20.3
 	github.com/aws/aws-sdk-go-v2/config v1.18.35
-	github.com/aws/aws-sdk-go-v2/service/ec2 v1.111.0
+	github.com/aws/aws-sdk-go-v2/service/ec2 v1.113.1
 	github.com/aws/aws-sdk-go-v2/service/iam v1.22.4
 	github.com/aws/aws-sdk-go-v2/service/sts v1.21.4
 	github.com/charmbracelet/lipgloss v0.7.1
