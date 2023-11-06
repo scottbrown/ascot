@@ -9,7 +9,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/iam v1.26.0
 	github.com/aws/aws-sdk-go-v2/service/sts v1.25.0
 	github.com/charmbracelet/lipgloss v0.9.1
-	github.com/spf13/cobra v1.7.0
+	github.com/spf13/cobra v1.8.0
 )
 
 require (
